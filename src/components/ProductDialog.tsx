@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImagePlus, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -34,6 +35,8 @@ interface ProductDialogProps {
 export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDialogProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -51,6 +54,7 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
         stock: product.stock.toString(),
         category: product.category,
       });
+      setImagePreview(product.image_url || null);
     } else {
       setFormData({
         name: "",
@@ -59,8 +63,48 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
         stock: "",
         category: "",
       });
+      setImagePreview(null);
     }
-  }, [product]);
+    setImageFile(null);
+  }, [product, open]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (10MB max)
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    if (file.size > maxSize) {
+      toast({
+        variant: "destructive",
+        title: "Arquivo muito grande",
+        description: "A imagem não pode exceder 10MB.",
+      });
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast({
+        variant: "destructive",
+        title: "Tipo de arquivo inválido",
+        description: "Por favor, selecione apenas arquivos de imagem.",
+      });
+      return;
+    }
+
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,12 +114,43 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Usuário não autenticado");
 
+      let imageUrl = product?.image_url || null;
+
+      // Upload image if a new one was selected
+      if (imageFile) {
+        const fileExt = imageFile.name.split(".").pop();
+        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("product-images")
+          .upload(fileName, imageFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from("product-images")
+          .getPublicUrl(fileName);
+
+        imageUrl = publicUrl;
+
+        // Delete old image if updating
+        if (product?.image_url) {
+          const oldFileName = product.image_url.split("/").pop();
+          if (oldFileName) {
+            await supabase.storage
+              .from("product-images")
+              .remove([`${user.id}/${oldFileName}`]);
+          }
+        }
+      }
+
       const productData = {
         name: formData.name,
         description: formData.description,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
         category: formData.category,
+        image_url: imageUrl,
         user_id: user.id,
       };
 
@@ -129,6 +204,52 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="image">Imagem do Produto</Label>
+              <div className="flex flex-col gap-2">
+                {imagePreview ? (
+                  <div className="relative w-full h-48 border rounded-lg overflow-hidden">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-2 right-2"
+                      onClick={removeImage}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center w-full h-48 border-2 border-dashed rounded-lg">
+                    <label
+                      htmlFor="image-upload"
+                      className="flex flex-col items-center justify-center cursor-pointer"
+                    >
+                      <ImagePlus className="h-12 w-12 text-muted-foreground mb-2" />
+                      <span className="text-sm text-muted-foreground">
+                        Clique para adicionar imagem
+                      </span>
+                      <span className="text-xs text-muted-foreground mt-1">
+                        Máximo 10MB
+                      </span>
+                    </label>
+                    <Input
+                      id="image-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageChange}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
             <div className="grid gap-2">
               <Label htmlFor="name">Nome do Produto *</Label>
               <Input

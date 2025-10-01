@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -8,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Package } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -61,6 +62,7 @@ export const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) 
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>Imagem</TableHead>
             <TableHead>Nome</TableHead>
             <TableHead>Categoria</TableHead>
             <TableHead className="text-right">Preço</TableHead>
@@ -72,6 +74,19 @@ export const ProductTable = ({ products, onEdit, onDelete }: ProductTableProps) 
         <TableBody>
           {products.map((product) => (
             <TableRow key={product.id}>
+              <TableCell>
+                <div className="w-16 h-16 rounded-md overflow-hidden bg-muted flex items-center justify-center">
+                  {product.image_url ? (
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Package className="h-8 w-8 text-muted-foreground" />
+                  )}
+                </div>
+              </TableCell>
               <TableCell className="font-medium">
                 <div>
                   <p className="font-semibold">{product.name}</p>
