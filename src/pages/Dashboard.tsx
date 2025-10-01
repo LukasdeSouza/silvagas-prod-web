@@ -4,9 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Plus, Search, Flame } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { ProductDialog } from "@/components/ProductDialog";
 import { ProductTable } from "@/components/ProductTable";
+import { Navigation } from "@/components/Navigation";
 import type { Database } from "@/integrations/supabase/types";
 
 type Product = Database["public"]["Tables"]["products"]["Row"];
@@ -114,23 +115,13 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Flame className="h-8 w-8 text-primary" />
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">GasManager</h1>
-              <p className="text-sm text-muted-foreground">Sistema de Gestão de Produtos</p>
-            </div>
-          </div>
-          <Button variant="outline" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4 mr-2" />
-            Sair
-          </Button>
-        </div>
-      </header>
+      <Navigation onSignOut={handleSignOut} />
 
       <main className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold mb-2">Produtos</h1>
+          <p className="text-muted-foreground">Gerencie seus produtos</p>
+        </div>
         <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex-1 w-full sm:max-w-md">
             <div className="relative">
