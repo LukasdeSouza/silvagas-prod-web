@@ -27,6 +27,8 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -53,7 +55,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     filterOrders();
-  }, [orders, searchTerm, statusFilter]);
+  }, [orders, searchTerm, statusFilter, dateFrom, dateTo]);
 
   const fetchOrders = async () => {
     try {
@@ -86,6 +88,20 @@ export default function AdminDashboard() {
 
     if (statusFilter !== "all") {
       filtered = filtered.filter((order) => order.status === statusFilter);
+    }
+
+    if (dateFrom) {
+      filtered = filtered.filter(
+        (order) => new Date(order.created_at) >= new Date(dateFrom)
+      );
+    }
+
+    if (dateTo) {
+      const endDate = new Date(dateTo);
+      endDate.setHours(23, 59, 59, 999);
+      filtered = filtered.filter(
+        (order) => new Date(order.created_at) <= endDate
+      );
     }
 
     setFilteredOrders(filtered);
@@ -166,25 +182,45 @@ export default function AdminDashboard() {
         </div>
 
         <div className="bg-card rounded-lg border p-6">
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1">
-              <Input
-                placeholder="Buscar por cliente ou email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+          <div className="space-y-4 mb-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Buscar por cliente ou email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full md:w-[200px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="pending">Pendente</SelectItem>
+                  <SelectItem value="completed">Completo</SelectItem>
+                  <SelectItem value="cancelled">Cancelado</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-[200px]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="pending">Pendente</SelectItem>
-                <SelectItem value="completed">Completo</SelectItem>
-                <SelectItem value="cancelled">Cancelado</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <label className="text-sm font-medium mb-2 block">Data inicial</label>
+                <Input
+                  type="date"
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-sm font-medium mb-2 block">Data final</label>
+                <Input
+                  type="date"
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                />
+              </div>
+            </div>
           </div>
 
           <AdminOrdersTable orders={filteredOrders} />
