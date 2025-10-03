@@ -1,13 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Bell, Package, LogOut } from "lucide-react";
+import { Bell, Package, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useUserRole } from "@/hooks/useUserRole";
 
 interface NavigationProps {
   onSignOut: () => void;
 }
 
 export const Navigation = ({ onSignOut }: NavigationProps) => {
+  const { isAdmin } = useUserRole();
+
   return (
     <nav className="border-b bg-background">
       <div className="container mx-auto px-4">
@@ -28,6 +31,21 @@ export const Navigation = ({ onSignOut }: NavigationProps) => {
                 <Package className="h-4 w-4" />
                 Produtos
               </NavLink>
+              {isAdmin && (
+                <NavLink
+                  to="/admin"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                      isActive
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted"
+                    }`
+                  }
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  Admin
+                </NavLink>
+              )}
               <NavLink
                 to="/notifications"
                 className={({ isActive }) =>
