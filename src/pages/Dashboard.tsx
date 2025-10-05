@@ -118,9 +118,9 @@ const Dashboard = () => {
       <Navigation onSignOut={handleSignOut} />
 
       <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold mb-2">Produtos</h1>
-          <p className="text-muted-foreground">Gerencie seus produtos</p>
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">Produtos</h1>
+          <p className="text-muted-foreground text-lg">Gerencie seus produtos de forma eficiente</p>
         </div>
         <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex-1 w-full sm:max-w-md">
@@ -135,7 +135,7 @@ const Dashboard = () => {
               />
             </div>
           </div>
-          <Button onClick={handleAddProduct}>
+          <Button onClick={handleAddProduct} className="shadow-md hover:shadow-lg transition-all duration-300">
             <Plus className="h-4 w-4 mr-2" />
             Novo Produto
           </Button>

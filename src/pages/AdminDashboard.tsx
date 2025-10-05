@@ -134,54 +134,60 @@ export default function AdminDashboard() {
       
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard Administrativo</h1>
-          <p className="text-muted-foreground">
-            Visualize todas as compras e estatísticas
-          </p>
+          <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">Admin Dashboard</h1>
+          <p className="text-muted-foreground text-lg">Gerencie pedidos e visualize estatísticas</p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3 mb-8">
-          <Card>
+        <div className="grid gap-6 md:grid-cols-3 mb-8">
+          <Card className="shadow-lg hover:shadow-[var(--shadow-elegant)] transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <div className="bg-primary/10 p-2 rounded-lg">
+                <DollarSign className="h-5 w-5 text-primary" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">R$ {totalRevenue.toFixed(2)}</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                R$ {totalRevenue.toFixed(2)}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
                 {orders.length} pedidos no total
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="shadow-lg hover:shadow-[var(--shadow-elegant)] transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Pedidos Completos</CardTitle>
-              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+              <div className="bg-secondary/10 p-2 rounded-lg">
+                <ShoppingCart className="h-5 w-5 text-secondary" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{completedOrders}</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-3xl font-bold text-secondary">{completedOrders}</div>
+              <p className="text-xs text-muted-foreground mt-1">
                 Finalizados com sucesso
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="shadow-lg hover:shadow-[var(--shadow-elegant)] transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Pedidos Pendentes</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <div className="bg-accent/10 p-2 rounded-lg">
+                <TrendingUp className="h-5 w-5 text-accent" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{pendingOrders}</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-3xl font-bold text-accent">{pendingOrders}</div>
+              <p className="text-xs text-muted-foreground mt-1">
                 Aguardando processamento
               </p>
             </CardContent>
           </Card>
         </div>
 
-        <div className="bg-card rounded-lg border p-6">
+        <div className="bg-card rounded-xl border shadow-lg p-8">
           <div className="space-y-4 mb-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
