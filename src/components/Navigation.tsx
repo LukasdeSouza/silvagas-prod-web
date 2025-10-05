@@ -16,7 +16,7 @@ export const Navigation = ({ onSignOut }: NavigationProps) => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-6">
-            <h1 className="text-xl font-bold text-primary">GasManager</h1>
+            <h1 className="text-xl font-bold text-primary">Silva Gás</h1>
             <div className="flex gap-2">
               <NavLink
                 to="/dashboard"

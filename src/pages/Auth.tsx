@@ -124,7 +124,7 @@ const Auth = () => {
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8 text-white">
           <Flame className="h-16 w-16 mb-4" />
-          <h1 className="text-3xl font-bold">GasManager</h1>
+          <h1 className="text-3xl font-bold">Silva Gás</h1>
           <p className="text-white/80 mt-2">Sistema de Gestão de Gás</p>
         </div>
 
