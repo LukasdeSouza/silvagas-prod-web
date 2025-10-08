@@ -120,25 +120,33 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary via-primary/90 to-primary/80 p-4">
-      <div className="w-full max-w-md">
-        <div className="flex flex-col items-center mb-8 text-white">
-          <Flame className="h-16 w-16 mb-4" />
-          <h1 className="text-3xl font-bold">Silva Gás</h1>
-          <p className="text-white/80 mt-2">Sistema de Gestão de Gás</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary via-primary/90 to-primary/80 p-4 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="w-full max-w-md relative z-10">
+        <div className="flex flex-col items-center mb-8 text-white animate-fade-in">
+          <div className="bg-white/10 backdrop-blur-sm p-5 rounded-2xl mb-6 shadow-elegant">
+            <Flame className="h-16 w-16" />
+          </div>
+          <h1 className="text-4xl font-bold mb-2">Silva Gás</h1>
+          <p className="text-white/90 text-lg">Sistema de Gestão de Gás</p>
         </div>
 
         <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-4">
-            <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="signup">Cadastro</TabsTrigger>
-            <TabsTrigger value="reset">Recuperar</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 mb-4 bg-white/10 backdrop-blur-sm">
+            <TabsTrigger value="login" className="data-[state=active]:bg-white data-[state=active]:text-primary">Login</TabsTrigger>
+            <TabsTrigger value="signup" className="data-[state=active]:bg-white data-[state=active]:text-primary">Cadastro</TabsTrigger>
+            <TabsTrigger value="reset" className="data-[state=active]:bg-white data-[state=active]:text-primary">Recuperar</TabsTrigger>
           </TabsList>
 
           <TabsContent value="login">
-            <Card>
-              <CardHeader>
-                <CardTitle>Entrar</CardTitle>
+            <Card className="backdrop-blur-sm bg-white/95 shadow-elegant border-0">
+              <CardHeader className="space-y-1">
+                <CardTitle className="text-2xl">Bem-vindo de volta!</CardTitle>
                 <CardDescription>
                   Digite suas credenciais para acessar o sistema
                 </CardDescription>
@@ -169,7 +177,7 @@ const Auth = () => {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full shadow-glow hover:shadow-elegant transition-all" disabled={isLoading}>
                     {isLoading ? "Entrando..." : "Entrar"}
                   </Button>
                 </CardFooter>
@@ -178,9 +186,9 @@ const Auth = () => {
           </TabsContent>
 
           <TabsContent value="signup">
-            <Card>
-              <CardHeader>
-                <CardTitle>Criar Conta</CardTitle>
+            <Card className="backdrop-blur-sm bg-white/95 shadow-elegant border-0">
+              <CardHeader className="space-y-1">
+                <CardTitle className="text-2xl">Criar Conta</CardTitle>
                 <CardDescription>
                   Preencha os dados para criar sua conta
                 </CardDescription>
@@ -212,7 +220,7 @@ const Auth = () => {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full shadow-glow hover:shadow-elegant transition-all" disabled={isLoading}>
                     {isLoading ? "Criando..." : "Criar Conta"}
                   </Button>
                 </CardFooter>
@@ -221,9 +229,9 @@ const Auth = () => {
           </TabsContent>
 
           <TabsContent value="reset">
-            <Card>
-              <CardHeader>
-                <CardTitle>Recuperar Senha</CardTitle>
+            <Card className="backdrop-blur-sm bg-white/95 shadow-elegant border-0">
+              <CardHeader className="space-y-1">
+                <CardTitle className="text-2xl">Recuperar Senha</CardTitle>
                 <CardDescription>
                   Digite seu email para receber instruções
                 </CardDescription>
@@ -243,7 +251,7 @@ const Auth = () => {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full shadow-glow hover:shadow-elegant transition-all" disabled={isLoading}>
                     {isLoading ? "Enviando..." : "Enviar Email"}
                   </Button>
                 </CardFooter>
