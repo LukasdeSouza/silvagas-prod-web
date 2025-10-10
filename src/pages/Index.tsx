@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Flame, ShieldCheck, Database, TrendingUp } from "lucide-react";
+import { ShieldCheck, Database, TrendingUp } from "lucide-react";
+import silvaGasLogo from "@/assets/silva-gas-logo-home.png";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -12,14 +13,13 @@ const Index = () => {
         <div className="container mx-auto px-4 py-24 relative">
           <div className="flex flex-col items-center text-center text-white">
             <div className="relative mb-8">
-              <div className="absolute inset-0 blur-2xl opacity-50 bg-primary-glow animate-pulse"></div>
-              <Flame className="relative h-24 w-24 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]" />
+              <div className="absolute inset-0 blur-2xl opacity-50 bg-white/20 animate-pulse"></div>
+              <div className="relative bg-white rounded-2xl p-6 shadow-elegant">
+                <img src={silvaGasLogo} alt="Silva Gás Logo" className="h-24 w-auto" />
+              </div>
             </div>
-            <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80 drop-shadow-lg">
-              Silva Gás
-            </h1>
-            <p className="text-xl md:text-2xl mb-10 text-white/90 max-w-2xl leading-relaxed">
-              Sistema Completo de Gestão de Produtos para Empresas de Gás
+            <p className="text-xl md:text-2xl mb-10 text-white/90 max-w-3xl leading-relaxed font-medium">
+              Sistema Completo de Gestão de Produtos e Promoções para a Empresa Silva Gás
             </p>
             <Button
               size="lg"
