@@ -13,10 +13,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-24 relative">
           <div className="flex flex-col items-center text-center text-white">
             <div className="relative mb-8">
-              <div className="absolute inset-0 blur-2xl opacity-50 bg-white/20 animate-pulse"></div>
-              <div className="relative bg-white rounded-2xl p-6 shadow-elegant">
-                <img src={silvaGasLogo} alt="Silva Gás Logo" className="h-24 w-auto" />
-              </div>
+              <img src={silvaGasLogo} alt="Silva Gás Logo" className="h-32 w-auto drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]" />
             </div>
             <p className="text-xl md:text-2xl mb-10 text-white/90 max-w-3xl leading-relaxed font-medium">
               Sistema Completo de Gestão de Produtos e Promoções para a Empresa Silva Gás
