@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Flame } from "lucide-react";
+import silvaGasLogo from "@/assets/silva-gas-logo.png";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -128,12 +128,11 @@ const Auth = () => {
       </div>
       
       <div className="w-full max-w-md relative z-10">
-        <div className="flex flex-col items-center mb-8 text-white animate-fade-in">
-          <div className="bg-white/10 backdrop-blur-sm p-5 rounded-2xl mb-6 shadow-elegant">
-            <Flame className="h-16 w-16" />
+        <div className="flex flex-col items-center mb-8 animate-fade-in">
+          <div className="bg-white rounded-2xl p-6 mb-6 shadow-elegant">
+            <img src={silvaGasLogo} alt="Silva Gás Logo" className="h-20 w-auto" />
           </div>
-          <h1 className="text-4xl font-bold mb-2">Silva Gás</h1>
-          <p className="text-white/90 text-lg">Sistema de Gestão de Gás</p>
+          <p className="text-white text-lg font-medium">Sistema de Gestão</p>
         </div>
 
         <Tabs defaultValue="login" className="w-full">
