@@ -4,12 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+interface Product {
+  id: string;
+  name: string;
+}
 
 interface Notification {
   id: string;
   title: string;
   message: string;
   expire_at: string;
+  product_id?: string;
 }
 
 interface NotificationDialogProps {
@@ -17,6 +24,7 @@ interface NotificationDialogProps {
   onOpenChange: (open: boolean) => void;
   notification: Notification | null;
   onSave: (data: Omit<Notification, "id">) => Promise<void>;
+  products: Product[];
 }
 
 export const NotificationDialog = ({
@@ -24,20 +32,24 @@ export const NotificationDialog = ({
   onOpenChange,
   notification,
   onSave,
+  products,
 }: NotificationDialogProps) => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [expireAt, setExpireAt] = useState("");
+  const [productId, setProductId] = useState<string>("");
 
   useEffect(() => {
     if (notification) {
       setTitle(notification.title);
       setMessage(notification.message);
       setExpireAt(notification.expire_at.split("T")[0]);
+      setProductId(notification.product_id || "");
     } else {
       setTitle("");
       setMessage("");
       setExpireAt("");
+      setProductId("");
     }
   }, [notification, open]);
 
@@ -47,6 +59,7 @@ export const NotificationDialog = ({
       title,
       message,
       expire_at: new Date(expireAt).toISOString(),
+      product_id: productId || undefined,
     });
     onOpenChange(false);
   };
@@ -78,6 +91,22 @@ export const NotificationDialog = ({
               required
               rows={4}
             />
+          </div>
+          <div>
+            <Label htmlFor="product">Produto (Opcional)</Label>
+            <Select value={productId} onValueChange={setProductId}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione um produto" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Nenhum produto</SelectItem>
+                {products.map((product) => (
+                  <SelectItem key={product.id} value={product.id}>
+                    {product.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <Label htmlFor="expire_at">Data de Expiração</Label>

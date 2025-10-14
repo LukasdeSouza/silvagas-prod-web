@@ -53,6 +53,7 @@ export type Database = {
           expire_at: string
           id: string
           message: string
+          product_id: string | null
           title: string
           updated_at: string
           user_id: string
@@ -62,6 +63,7 @@ export type Database = {
           expire_at: string
           id?: string
           message: string
+          product_id?: string | null
           title: string
           updated_at?: string
           user_id: string
@@ -71,11 +73,20 @@ export type Database = {
           expire_at?: string
           id?: string
           message?: string
+          product_id?: string | null
           title?: string
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "notifications_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_items: {
         Row: {

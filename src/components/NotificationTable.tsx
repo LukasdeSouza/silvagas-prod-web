@@ -11,6 +11,9 @@ interface Notification {
   message: string;
   expire_at: string;
   created_at: string;
+  product?: {
+    name: string;
+  } | null;
 }
 
 interface NotificationTableProps {
@@ -35,6 +38,7 @@ export const NotificationTable = ({
           <TableRow>
             <TableHead>Título</TableHead>
             <TableHead>Mensagem</TableHead>
+            <TableHead>Produto</TableHead>
             <TableHead>Expira em</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Ações</TableHead>
@@ -43,7 +47,7 @@ export const NotificationTable = ({
         <TableBody>
           {notifications.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center text-muted-foreground">
+              <TableCell colSpan={6} className="text-center text-muted-foreground">
                 Nenhuma notificação cadastrada
               </TableCell>
             </TableRow>
@@ -52,6 +56,9 @@ export const NotificationTable = ({
               <TableRow key={notification.id}>
                 <TableCell className="font-medium">{notification.title}</TableCell>
                 <TableCell className="max-w-md truncate">{notification.message}</TableCell>
+                <TableCell>
+                  {notification.product?.name || "-"}
+                </TableCell>
                 <TableCell>
                   {format(new Date(notification.expire_at), "dd/MM/yyyy", { locale: ptBR })}
                 </TableCell>
