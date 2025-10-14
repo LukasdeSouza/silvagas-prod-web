@@ -44,12 +44,12 @@ export const NotificationDialog = ({
       setTitle(notification.title);
       setMessage(notification.message);
       setExpireAt(notification.expire_at.split("T")[0]);
-      setProductId(notification.product_id || "");
+      setProductId(notification.product_id || "none");
     } else {
       setTitle("");
       setMessage("");
       setExpireAt("");
-      setProductId("");
+      setProductId("none");
     }
   }, [notification, open]);
 
@@ -59,7 +59,7 @@ export const NotificationDialog = ({
       title,
       message,
       expire_at: new Date(expireAt).toISOString(),
-      product_id: productId || undefined,
+      product_id: productId === "none" ? undefined : productId,
     });
     onOpenChange(false);
   };
@@ -99,7 +99,7 @@ export const NotificationDialog = ({
                 <SelectValue placeholder="Selecione um produto" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Nenhum produto</SelectItem>
+                <SelectItem value="none">Nenhum produto</SelectItem>
                 {products.map((product) => (
                   <SelectItem key={product.id} value={product.id}>
                     {product.name}
