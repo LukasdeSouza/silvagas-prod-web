@@ -111,15 +111,12 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
     setIsLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Usuário não autenticado");
-
       let imageUrl = product?.image_url || null;
 
       // Upload image if a new one was selected
       if (imageFile) {
         const fileExt = imageFile.name.split(".").pop();
-        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+        const fileName = `${Date.now()}.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage
           .from("product-images")
@@ -139,7 +136,7 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
           if (oldFileName) {
             await supabase.storage
               .from("product-images")
-              .remove([`${user.id}/${oldFileName}`]);
+              .remove([oldFileName]);
           }
         }
       }
@@ -151,7 +148,6 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
         stock: parseInt(formData.stock),
         category: formData.category,
         image_url: imageUrl,
-        user_id: user.id,
       };
 
       if (product) {

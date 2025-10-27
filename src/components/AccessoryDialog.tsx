@@ -100,34 +100,30 @@ export const AccessoryDialog = ({
     setIsLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Usuário não autenticado");
-
       let imageUrl = accessory?.image_url || null;
 
       if (imageFile) {
         const fileExt = imageFile.name.split(".").pop();
         const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `${user.id}/${fileName}`;
 
         if (accessory?.image_url) {
           const oldPath = accessory.image_url.split("/").pop();
           if (oldPath) {
             await supabase.storage
               .from("product-images")
-              .remove([`${user.id}/${oldPath}`]);
+              .remove([oldPath]);
           }
         }
 
         const { error: uploadError } = await supabase.storage
           .from("product-images")
-          .upload(filePath, imageFile);
+          .upload(fileName, imageFile);
 
         if (uploadError) throw uploadError;
 
         const { data: { publicUrl } } = supabase.storage
           .from("product-images")
-          .getPublicUrl(filePath);
+          .getPublicUrl(fileName);
 
         imageUrl = publicUrl;
       }
@@ -137,7 +133,6 @@ export const AccessoryDialog = ({
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
         image_url: imageUrl,
-        user_id: user.id,
       };
 
       if (accessory) {
