@@ -249,6 +249,27 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sorteio_participants: {
         Row: {
           created_at: string
@@ -276,6 +297,13 @@ export type Database = {
             referencedRelation: "sorteios"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "sorteio_participants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       sorteios: {
@@ -283,30 +311,36 @@ export type Database = {
           created_at: string
           created_by: string
           description: string | null
+          end_date: string
           id: string
           image_url: string | null
           name: string
           product_id: string | null
+          start_date: string
           updated_at: string
         }
         Insert: {
           created_at?: string
           created_by: string
           description?: string | null
+          end_date?: string
           id?: string
           image_url?: string | null
           name: string
           product_id?: string | null
+          start_date?: string
           updated_at?: string
         }
         Update: {
           created_at?: string
           created_by?: string
           description?: string | null
+          end_date?: string
           id?: string
           image_url?: string | null
           name?: string
           product_id?: string | null
+          start_date?: string
           updated_at?: string
         }
         Relationships: [

@@ -45,6 +45,8 @@ export const SorteioDialog = ({
     name: "",
     description: "",
     product_id: "",
+    start_date: "",
+    end_date: "",
   });
 
   useEffect(() => {
@@ -126,6 +128,8 @@ export const SorteioDialog = ({
           product_id: formData.product_id || null,
           image_url: imageUrl,
           created_by: user.id,
+          start_date: formData.start_date,
+          end_date: formData.end_date,
         })
         .select()
         .single();
@@ -158,7 +162,7 @@ export const SorteioDialog = ({
       });
 
       // Reset form
-      setFormData({ name: "", description: "", product_id: "" });
+      setFormData({ name: "", description: "", product_id: "", start_date: "", end_date: "" });
       setImageFile(null);
       setImagePreview("");
       onSave();
@@ -226,6 +230,34 @@ export const SorteioDialog = ({
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="start_date">Data de Início *</Label>
+              <Input
+                id="start_date"
+                type="date"
+                value={formData.start_date}
+                onChange={(e) =>
+                  setFormData({ ...formData, start_date: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="end_date">Data de Fim *</Label>
+              <Input
+                id="end_date"
+                type="date"
+                value={formData.end_date}
+                onChange={(e) =>
+                  setFormData({ ...formData, end_date: e.target.value })
+                }
+                required
+                min={formData.start_date}
+              />
+            </div>
           </div>
 
           <div>
