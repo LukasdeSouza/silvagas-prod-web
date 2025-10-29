@@ -7,7 +7,7 @@ import { useUserRole } from "@/hooks/useUserRole";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
+import { DollarSign, ShoppingCart, TrendingUp, Users, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 
 interface Order {
@@ -29,6 +29,8 @@ export default function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [newUsers, setNewUsers] = useState(0);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -50,6 +52,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (isAdmin) {
       fetchOrders();
+      fetchUserStats();
     }
   }, [isAdmin]);
 
@@ -72,6 +75,33 @@ export default function AdminDashboard() {
       toast.error("Erro ao carregar pedidos");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchUserStats = async () => {
+    try {
+      // Total users
+      const { count: total, error: totalError } = await supabase
+        .from("user_roles")
+        .select("*", { count: "exact", head: true });
+
+      if (totalError) throw totalError;
+      setTotalUsers(total || 0);
+
+      // New users (last 30 days)
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      const { count: newCount, error: newError } = await supabase
+        .from("user_roles")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", thirtyDaysAgo.toISOString());
+
+      if (newError) throw newError;
+      setNewUsers(newCount || 0);
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+      toast.error("Erro ao carregar estatísticas de usuários");
     }
   };
 
@@ -138,7 +168,7 @@ export default function AdminDashboard() {
           <p className="text-muted-foreground text-lg">Gerencie pedidos e visualize estatísticas</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3 mb-8">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5 mb-8">
           <Card className="shadow-lg hover:shadow-[var(--shadow-elegant)] transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
@@ -182,6 +212,36 @@ export default function AdminDashboard() {
               <div className="text-3xl font-bold text-accent">{pendingOrders}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 Aguardando processamento
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-lg hover:shadow-[var(--shadow-elegant)] transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total de Usuários</CardTitle>
+              <div className="bg-blue-500/10 p-2 rounded-lg">
+                <Users className="h-5 w-5 text-blue-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-blue-500">{totalUsers}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Cadastrados na plataforma
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-lg hover:shadow-[var(--shadow-elegant)] transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Novos Usuários</CardTitle>
+              <div className="bg-green-500/10 p-2 rounded-lg">
+                <UserPlus className="h-5 w-5 text-green-500" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-green-500">{newUsers}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Últimos 30 dias
               </p>
             </CardContent>
           </Card>

@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Bell, Package, LogOut, LayoutDashboard, Wrench } from "lucide-react";
+import { Bell, Package, LogOut, LayoutDashboard, Wrench, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/useUserRole";
 
@@ -43,6 +43,19 @@ export const Navigation = ({ onSignOut }: NavigationProps) => {
               >
                 <Wrench className="h-4 w-4" />
                 Acessórios
+              </NavLink>
+              <NavLink
+                to="/sorteios"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted"
+                  }`
+                }
+              >
+                <Trophy className="h-4 w-4" />
+                Sorteios
               </NavLink>
               {isAdmin && (
                 <NavLink

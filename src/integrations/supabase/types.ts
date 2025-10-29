@@ -23,7 +23,6 @@ export type Database = {
           price: number
           stock: number
           updated_at: string
-          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -33,7 +32,6 @@ export type Database = {
           price: number
           stock?: number
           updated_at?: string
-          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -43,7 +41,42 @@ export type Database = {
           price?: number
           stock?: number
           updated_at?: string
-          user_id?: string | null
+        }
+        Relationships: []
+      }
+      addresses: {
+        Row: {
+          bairro: string
+          cep: string
+          complemento: string | null
+          created_at: string
+          id: string
+          numero: string
+          rua: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bairro: string
+          cep: string
+          complemento?: string | null
+          created_at?: string
+          id?: string
+          numero: string
+          rua: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bairro?: string
+          cep?: string
+          complemento?: string | null
+          created_at?: string
+          id?: string
+          numero?: string
+          rua?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -135,6 +168,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          address_id: string | null
           created_at: string | null
           customer_email: string
           customer_name: string
@@ -146,6 +180,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          address_id?: string | null
           created_at?: string | null
           customer_email: string
           customer_name: string
@@ -157,6 +192,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          address_id?: string | null
           created_at?: string | null
           customer_email?: string
           customer_name?: string
@@ -167,7 +203,15 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "orders_address_id_fkey"
+            columns: ["address_id"]
+            isOneToOne: false
+            referencedRelation: "addresses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {
@@ -180,7 +224,6 @@ export type Database = {
           price: number
           stock: number
           updated_at: string
-          user_id: string | null
         }
         Insert: {
           category: string
@@ -192,7 +235,6 @@ export type Database = {
           price: number
           stock?: number
           updated_at?: string
-          user_id?: string | null
         }
         Update: {
           category?: string
@@ -204,9 +246,78 @@ export type Database = {
           price?: number
           stock?: number
           updated_at?: string
-          user_id?: string | null
         }
         Relationships: []
+      }
+      sorteio_participants: {
+        Row: {
+          created_at: string
+          id: string
+          sorteio_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          sorteio_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          sorteio_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sorteio_participants_sorteio_id_fkey"
+            columns: ["sorteio_id"]
+            isOneToOne: false
+            referencedRelation: "sorteios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sorteios: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          product_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          product_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          product_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sorteios_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
