@@ -270,7 +270,9 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
                 <SelectContent>
                   <SelectItem value="GLP">GLP (Gás Liquefeito de Petróleo)</SelectItem>
                   <SelectItem value="GN">GN (Gás Natural)</SelectItem>
-                  <SelectItem value="GNV">GNV (Gás Natural Veicular)</SelectItem>
+                  <SelectItem value="Agua">Água</SelectItem>
+                  <SelectItem value="Brinde">Brinde</SelectItem>
+                  <SelectItem value="Sorteio">Sorteio</SelectItem>
                   <SelectItem value="Acessórios">Acessórios</SelectItem>
                   <SelectItem value="Outros">Outros</SelectItem>
                 </SelectContent>
