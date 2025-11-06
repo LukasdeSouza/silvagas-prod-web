@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck, Database, TrendingUp } from "lucide-react";
+import { ShieldCheck, Database, TrendingUp, HelpCircle } from "lucide-react";
 import silvaGasLogo from "@/assets/silva-gas-logo-home.png";
 
 const Index = () => {
@@ -11,6 +11,17 @@ const Index = () => {
       <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary/80 shadow-[0_20px_60px_-20px_rgba(59,130,246,0.5)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.3),rgba(59,130,246,0))]"></div>
         <div className="container mx-auto px-4 py-24 relative">
+          <div className="flex justify-end mb-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/suporte")}
+              className="text-white hover:bg-white/10"
+            >
+              <HelpCircle className="h-5 w-5 mr-2" />
+              Suporte e Ajuda
+            </Button>
+          </div>
           <div className="flex flex-col items-center text-center text-white">
             <div className="relative mb-8">
               <img src={silvaGasLogo} alt="Silva Gás Logo" className="h-32 w-auto drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]" />

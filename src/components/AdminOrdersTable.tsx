@@ -12,8 +12,6 @@ import { format } from "date-fns";
 
 interface Order {
   id: string;
-  customer_name: string;
-  customer_email: string;
   total_amount: number;
   status: string;
   created_at: string;
@@ -43,8 +41,6 @@ export const AdminOrdersTable = ({ orders }: AdminOrdersTableProps) => {
         <TableHeader>
           <TableRow>
             <TableHead>Data</TableHead>
-            <TableHead>Cliente</TableHead>
-            <TableHead>Email</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Valor</TableHead>
           </TableRow>
@@ -52,7 +48,7 @@ export const AdminOrdersTable = ({ orders }: AdminOrdersTableProps) => {
         <TableBody>
           {orders.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center text-muted-foreground">
+              <TableCell colSpan={3} className="text-center text-muted-foreground">
                 Nenhuma compra encontrada
               </TableCell>
             </TableRow>
@@ -62,8 +58,6 @@ export const AdminOrdersTable = ({ orders }: AdminOrdersTableProps) => {
                 <TableCell>
                   {format(new Date(order.created_at), "dd/MM/yyyy HH:mm")}
                 </TableCell>
-                <TableCell>{order.customer_name}</TableCell>
-                <TableCell>{order.customer_email}</TableCell>
                 <TableCell>
                   <Badge className={getStatusColor(order.status)}>
                     {order.status}

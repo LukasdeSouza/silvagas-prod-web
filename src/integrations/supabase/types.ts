@@ -170,9 +170,6 @@ export type Database = {
         Row: {
           address_id: string | null
           created_at: string | null
-          customer_email: string
-          customer_name: string
-          customer_phone: string | null
           id: string
           status: string
           total_amount: number
@@ -182,9 +179,6 @@ export type Database = {
         Insert: {
           address_id?: string | null
           created_at?: string | null
-          customer_email: string
-          customer_name: string
-          customer_phone?: string | null
           id?: string
           status?: string
           total_amount: number
@@ -194,9 +188,6 @@ export type Database = {
         Update: {
           address_id?: string | null
           created_at?: string | null
-          customer_email?: string
-          customer_name?: string
-          customer_phone?: string | null
           id?: string
           status?: string
           total_amount?: number
@@ -352,6 +343,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      support_tickets: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {

@@ -268,12 +268,10 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
                   <SelectValue placeholder="Selecione uma categoria" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="GLP">GLP (Gás Liquefeito de Petróleo)</SelectItem>
                   <SelectItem value="GN">GN (Gás Natural)</SelectItem>
-                  <SelectItem value="Agua">Água</SelectItem>
-                  <SelectItem value="Brinde">Brinde</SelectItem>
-                  <SelectItem value="Sorteio">Sorteio</SelectItem>
                   <SelectItem value="Acessórios">Acessórios</SelectItem>
+                  <SelectItem value="Água">Água</SelectItem>
+                  <SelectItem value="Brinde">Brinde</SelectItem>
                   <SelectItem value="Outros">Outros</SelectItem>
                 </SelectContent>
               </Select>

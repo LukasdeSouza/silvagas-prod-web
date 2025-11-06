@@ -12,8 +12,6 @@ import { toast } from "sonner";
 
 interface Order {
   id: string;
-  customer_name: string;
-  customer_email: string;
   total_amount: number;
   status: string;
   created_at: string;
@@ -25,7 +23,6 @@ export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
@@ -58,7 +55,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     filterOrders();
-  }, [orders, searchTerm, statusFilter, dateFrom, dateTo]);
+  }, [orders, statusFilter, dateFrom, dateTo]);
 
   const fetchOrders = async () => {
     try {
@@ -107,14 +104,6 @@ export default function AdminDashboard() {
 
   const filterOrders = () => {
     let filtered = [...orders];
-
-    if (searchTerm) {
-      filtered = filtered.filter(
-        (order) =>
-          order.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          order.customer_email.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
 
     if (statusFilter !== "all") {
       filtered = filtered.filter((order) => order.status === statusFilter);
@@ -250,13 +239,6 @@ export default function AdminDashboard() {
         <div className="bg-card rounded-xl border shadow-lg p-8">
           <div className="space-y-4 mb-6">
             <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <Input
-                  placeholder="Buscar por cliente ou email..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-full md:w-[200px]">
                   <SelectValue placeholder="Status" />
