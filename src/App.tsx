@@ -11,6 +11,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Notifications from "./pages/Notifications";
 import Accessories from "./pages/Accessories";
 import Sorteios from "./pages/Sorteios";
+import Orders from "./pages/Orders";
 import NotFound from "./pages/NotFound";
 import { SplashScreen } from "./components/SplashScreen";
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/accessories" element={<Accessories />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/sorteios" element={<Sorteios />} />
           <Route path="/notifications" element={<Notifications />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
