@@ -8,6 +8,15 @@ import { Plus, Search } from "lucide-react";
 import { ProductDialog } from "@/components/ProductDialog";
 import { ProductTable } from "@/components/ProductTable";
 import { Navigation } from "@/components/Navigation";
+import { TopProductsChart } from "@/components/TopProductsChart";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import type { Database } from "@/integrations/supabase/types";
 
 type Product = Database["public"]["Tables"]["products"]["Row"];
@@ -21,6 +30,8 @@ const Dashboard = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     checkAuth();
@@ -29,6 +40,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     filterProducts();
+    setCurrentPage(1);
   }, [searchTerm, products]);
 
   const checkAuth = async () => {
@@ -113,6 +125,12 @@ const Dashboard = () => {
     fetchProducts();
   };
 
+  // Paginação
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation onSignOut={handleSignOut} />
@@ -122,6 +140,11 @@ const Dashboard = () => {
           <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">Produtos</h1>
           <p className="text-muted-foreground text-lg">Gerencie seus produtos de forma eficiente</p>
         </div>
+
+        <div className="mb-8">
+          <TopProductsChart />
+        </div>
+
         <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex-1 w-full sm:max-w-md">
             <div className="relative">
@@ -146,11 +169,44 @@ const Dashboard = () => {
             <p className="text-muted-foreground">Carregando produtos...</p>
           </div>
         ) : (
-          <ProductTable
-            products={filteredProducts}
-            onEdit={handleEditProduct}
-            onDelete={handleDeleteProduct}
-          />
+          <>
+            <ProductTable
+              products={currentProducts}
+              onEdit={handleEditProduct}
+              onDelete={handleDeleteProduct}
+            />
+            {totalPages > 1 && (
+              <div className="mt-6">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          onClick={() => setCurrentPage(page)}
+                          isActive={currentPage === page}
+                          className="cursor-pointer"
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            )}
+          </>
         )}
       </main>
 

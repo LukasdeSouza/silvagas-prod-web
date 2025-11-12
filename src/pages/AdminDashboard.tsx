@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigation } from "@/components/Navigation";
 import { AdminOrdersTable } from "@/components/AdminOrdersTable";
+import { OrdersChart } from "@/components/OrdersChart";
+import { RevenueByCategoryChart } from "@/components/RevenueByCategoryChart";
 import { useUserRole } from "@/hooks/useUserRole";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -234,6 +236,11 @@ export default function AdminDashboard() {
               </p>
             </CardContent>
           </Card>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 mb-8">
+          <OrdersChart orders={orders} />
+          <RevenueByCategoryChart />
         </div>
 
         <div className="bg-card rounded-xl border shadow-lg p-8">
