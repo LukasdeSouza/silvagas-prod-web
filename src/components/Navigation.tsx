@@ -71,19 +71,34 @@ export const Navigation = ({ onSignOut }: NavigationProps) => {
                 Sorteios
               </NavLink>
               {isAdmin && (
-                <NavLink
-                  to="/admin"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
-                      isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted"
-                    }`
-                  }
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Admin
-                </NavLink>
+                <>
+                  <NavLink
+                    to="/admin"
+                    className={({ isActive }) =>
+                      `flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                        isActive
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:bg-muted"
+                      }`
+                    }
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    Admin
+                  </NavLink>
+                  <NavLink
+                    to="/redemption-levels"
+                    className={({ isActive }) =>
+                      `flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                        isActive
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:bg-muted"
+                      }`
+                    }
+                  >
+                    <Package className="h-4 w-4" />
+                    Níveis de Resgate
+                  </NavLink>
+                </>
               )}
               <NavLink
                 to="/notifications"

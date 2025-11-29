@@ -43,6 +43,7 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
     price: "",
     stock: "",
     category: "",
+    points_value: "0",
   });
 
   useEffect(() => {
@@ -53,6 +54,7 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
         price: product.price.toString(),
         stock: product.stock.toString(),
         category: product.category,
+        points_value: product.points_value?.toString() || "0",
       });
       setImagePreview(product.image_url || null);
     } else {
@@ -62,6 +64,7 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
         price: "",
         stock: "",
         category: "",
+        points_value: "0",
       });
       setImagePreview(null);
     }
@@ -148,6 +151,7 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
         stock: parseInt(formData.stock),
         category: formData.category,
         image_url: imageUrl,
+        points_value: parseInt(formData.points_value),
       };
 
       if (product) {
@@ -304,6 +308,21 @@ export const ProductDialog = ({ open, onOpenChange, product, onSave }: ProductDi
                   required
                 />
               </div>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="points_value">Pontos por Compra</Label>
+              <Input
+                id="points_value"
+                type="number"
+                min="0"
+                value={formData.points_value}
+                onChange={(e) => setFormData({ ...formData, points_value: e.target.value })}
+                placeholder="0"
+              />
+              <p className="text-xs text-muted-foreground">
+                Pontos que o cliente ganha ao comprar este produto (1 ponto = R$ 0,10 de desconto)
+              </p>
             </div>
 
             <div className="grid gap-2">

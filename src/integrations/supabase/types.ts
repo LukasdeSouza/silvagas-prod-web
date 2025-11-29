@@ -170,7 +170,9 @@ export type Database = {
         Row: {
           address_id: string | null
           created_at: string | null
+          discount_amount: number | null
           id: string
+          points_used: number | null
           status: string
           total_amount: number
           updated_at: string | null
@@ -179,7 +181,9 @@ export type Database = {
         Insert: {
           address_id?: string | null
           created_at?: string | null
+          discount_amount?: number | null
           id?: string
+          points_used?: number | null
           status?: string
           total_amount: number
           updated_at?: string | null
@@ -188,7 +192,9 @@ export type Database = {
         Update: {
           address_id?: string | null
           created_at?: string | null
+          discount_amount?: number | null
           id?: string
+          points_used?: number | null
           status?: string
           total_amount?: number
           updated_at?: string | null
@@ -204,6 +210,36 @@ export type Database = {
           },
         ]
       }
+      points_redemption_levels: {
+        Row: {
+          created_at: string
+          description: string | null
+          discount_amount: number
+          id: string
+          is_active: boolean
+          points_required: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          discount_amount: number
+          id?: string
+          is_active?: boolean
+          points_required: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          discount_amount?: number
+          id?: string
+          is_active?: boolean
+          points_required?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string
@@ -212,6 +248,7 @@ export type Database = {
           id: string
           image_url: string | null
           name: string
+          points_value: number
           price: number
           stock: number
           updated_at: string
@@ -223,6 +260,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name: string
+          points_value?: number
           price: number
           stock?: number
           updated_at?: string
@@ -234,6 +272,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name?: string
+          points_value?: number
           price?: number
           stock?: number
           updated_at?: string
@@ -245,18 +284,21 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          points: number
           updated_at: string
         }
         Insert: {
           created_at?: string
           email: string
           id: string
+          points?: number
           updated_at?: string
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
+          points?: number
           updated_at?: string
         }
         Relationships: []
@@ -403,6 +445,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_points_discount: {
+        Args: { _order_id: string; _points_to_use: number; _user_id: string }
+        Returns: {
+          message: string
+          success: boolean
+        }[]
+      }
+      calculate_points_discount: {
+        Args: { _points_to_use: number; _user_id: string }
+        Returns: {
+          available_points: number
+          discount_amount: number
+          message: string
+          points_to_use: number
+          success: boolean
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
