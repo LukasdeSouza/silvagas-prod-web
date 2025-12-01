@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Navigation } from "@/components/Navigation";
+import { AuthLayout } from "@/components/AuthLayout";
 import { AdminOrdersTable } from "@/components/AdminOrdersTable";
 import { OrdersChart } from "@/components/OrdersChart";
 import { RevenueByCategoryChart } from "@/components/RevenueByCategoryChart";
@@ -128,10 +128,6 @@ export default function AdminDashboard() {
     setFilteredOrders(filtered);
   };
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth");
-  };
 
   const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total_amount), 0);
   const completedOrders = orders.filter((order) => order.status === "completed").length;
@@ -150,10 +146,8 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation onSignOut={handleSignOut} />
-      
-      <main className="container mx-auto px-4 py-8">
+    <AuthLayout>
+      <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">Admin Dashboard</h1>
           <p className="text-muted-foreground text-lg">Gerencie pedidos e visualize estatísticas</p>
@@ -280,7 +274,7 @@ export default function AdminDashboard() {
 
           <AdminOrdersTable orders={filteredOrders} />
         </div>
-      </main>
-    </div>
+      </div>
+    </AuthLayout>
   );
 }

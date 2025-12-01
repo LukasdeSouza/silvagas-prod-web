@@ -7,7 +7,7 @@ import { Plus, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { NotificationTable } from "@/components/NotificationTable";
 import { NotificationDialog } from "@/components/NotificationDialog";
-import { Navigation } from "@/components/Navigation";
+import { AuthLayout } from "@/components/AuthLayout";
 
 interface Notification {
   id: string;
@@ -110,10 +110,6 @@ const Notifications = () => {
     setFilteredNotifications(filtered);
   };
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth");
-  };
 
   const handleAddNotification = () => {
     setSelectedNotification(null);
@@ -190,9 +186,7 @@ const Notifications = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation onSignOut={handleSignOut} />
-      
+    <AuthLayout>
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">Notificações</h1>
@@ -229,7 +223,7 @@ const Notifications = () => {
           products={products}
         />
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 

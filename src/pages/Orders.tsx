@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Navigation } from "@/components/Navigation";
+import { AuthLayout } from "@/components/AuthLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -136,10 +136,6 @@ const Orders = () => {
   const endIndex = startIndex + itemsPerPage;
   const currentOrders = filteredOrders.slice(startIndex, endIndex);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth");
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -176,9 +172,7 @@ const Orders = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation onSignOut={handleSignOut} />
-      
+    <AuthLayout>
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-2 mb-8">
           <ShoppingCart className="h-8 w-8 text-primary" />
@@ -341,7 +335,7 @@ const Orders = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 

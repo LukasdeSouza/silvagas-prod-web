@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { Bell, Package, LogOut, LayoutDashboard, Wrench, Trophy, ShoppingCart } from "lucide-react";
+import { Bell, Package, LogOut, LayoutDashboard, Wrench, Trophy, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useUserRole } from "@/hooks/useUserRole";
+import { supabase } from "@/integrations/supabase/client";
 
 interface NavigationProps {
   onSignOut: () => void;
@@ -10,6 +12,50 @@ interface NavigationProps {
 
 export const Navigation = ({ onSignOut }: NavigationProps) => {
   const { isAdmin } = useUserRole();
+  const [userPoints, setUserPoints] = useState<number>(0);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("points")
+          .eq("id", user.id)
+          .single();
+        
+        if (data && !error) {
+          setUserPoints(data.points);
+        }
+      }
+    };
+
+    fetchUserPoints();
+
+    // Subscribe to realtime updates for points
+    const channel = supabase
+      .channel('points-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles'
+        },
+        (payload: any) => {
+          if (userId && payload.new.id === userId) {
+            setUserPoints(payload.new.points);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [userId]);
 
   return (
     <nav className="border-b bg-background">
@@ -115,14 +161,21 @@ export const Navigation = ({ onSignOut }: NavigationProps) => {
               </NavLink>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            onClick={onSignOut}
-            className="flex items-center gap-2"
-          >
-            <LogOut className="h-4 w-4" />
-            Sair
-          </Button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary/10">
+              <Star className="h-5 w-5 text-primary fill-primary" />
+              <span className="font-semibold text-primary">{userPoints}</span>
+              <span className="text-sm text-muted-foreground">pontos</span>
+            </div>
+            <Button
+              variant="ghost"
+              onClick={onSignOut}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Sair
+            </Button>
+          </div>
         </div>
       </div>
     </nav>

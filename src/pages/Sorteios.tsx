@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Trophy, Users, Gift } from "lucide-react";
-import { Navigation } from "@/components/Navigation";
+import { AuthLayout } from "@/components/AuthLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SorteioDialog } from "@/components/SorteioDialog";
 import { SorteiosList } from "@/components/SorteiosList";
@@ -65,10 +65,6 @@ const Sorteios = () => {
     setTotalUsers(count || 0);
   };
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth");
-  };
 
   const handleSaveSorteio = () => {
     setIsDialogOpen(false);
@@ -96,10 +92,8 @@ const Sorteios = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation onSignOut={handleSignOut} />
-
-      <main className="container mx-auto px-4 py-8">
+    <AuthLayout>
+      <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
             Sorteios
@@ -175,14 +169,14 @@ const Sorteios = () => {
             onDelete={handleDeleteSorteio}
           />
         )}
-      </main>
 
       <SorteioDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         onSave={handleSaveSorteio}
       />
-    </div>
+      </div>
+    </AuthLayout>
   );
 };
 

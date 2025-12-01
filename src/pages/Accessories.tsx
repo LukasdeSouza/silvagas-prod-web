@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Navigation } from "@/components/Navigation";
+import { AuthLayout } from "@/components/AuthLayout";
 import { AccessoryTable } from "@/components/AccessoryTable";
 import { AccessoryDialog } from "@/components/AccessoryDialog";
 import { Database } from "@/integrations/supabase/types";
@@ -80,14 +80,10 @@ const Accessories = () => {
     setDialogOpen(true);
   };
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      <Navigation onSignOut={handleSignOut} />
-      <div className="container mx-auto px-4 py-8">
+    <AuthLayout>
+      <div className="container mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-2 animate-fade-in">
@@ -123,7 +119,7 @@ const Accessories = () => {
           onSave={handleSave}
         />
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 

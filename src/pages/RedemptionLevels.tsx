@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigation } from "@/components/Navigation";
+import { AuthLayout } from "@/components/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -90,14 +90,8 @@ const RedemptionLevels = () => {
     return null;
   }
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth");
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation onSignOut={handleSignOut} />
+    <AuthLayout>
       <div className="container mx-auto p-6">
         <div className="flex justify-between items-center mb-6">
           <div>
@@ -129,7 +123,7 @@ const RedemptionLevels = () => {
           onSave={handleSave}
         />
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 

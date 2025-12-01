@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, Search } from "lucide-react";
 import { ProductDialog } from "@/components/ProductDialog";
 import { ProductTable } from "@/components/ProductTable";
-import { Navigation } from "@/components/Navigation";
+import { AuthLayout } from "@/components/AuthLayout";
 import { TopProductsChart } from "@/components/TopProductsChart";
 import {
   Pagination,
@@ -85,10 +85,6 @@ const Dashboard = () => {
     setFilteredProducts(filtered);
   };
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth");
-  };
 
   const handleAddProduct = () => {
     setEditingProduct(null);
@@ -132,10 +128,8 @@ const Dashboard = () => {
   const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation onSignOut={handleSignOut} />
-
-      <main className="container mx-auto px-4 py-8">
+    <AuthLayout>
+      <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">Produtos</h1>
           <p className="text-muted-foreground text-lg">Gerencie seus produtos de forma eficiente</p>
@@ -208,7 +202,6 @@ const Dashboard = () => {
             )}
           </>
         )}
-      </main>
 
       <ProductDialog
         open={isDialogOpen}
@@ -216,7 +209,8 @@ const Dashboard = () => {
         product={editingProduct}
         onSave={handleSaveProduct}
       />
-    </div>
+      </div>
+    </AuthLayout>
   );
 };
 
