@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { Bell, Package, LogOut, LayoutDashboard, Wrench, Trophy, ShoppingCart, Star } from "lucide-react";
+import { Bell, Package, LogOut, LayoutDashboard, Wrench, Trophy, ShoppingCart, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -102,6 +102,19 @@ export const Navigation = ({ onSignOut }: NavigationProps) => {
               >
                 <ShoppingCart className="h-4 w-4" />
                 Pedidos
+              </NavLink>
+              <NavLink
+                to="/partners"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted"
+                  }`
+                }
+              >
+                <Building2 className="h-4 w-4" />
+                Parceiros
               </NavLink>
               <NavLink
                 to="/sorteios"

@@ -210,6 +210,45 @@ export type Database = {
           },
         ]
       }
+      partners: {
+        Row: {
+          address: string | null
+          coupon_code: string
+          created_at: string
+          description: string | null
+          discount_amount: number
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          coupon_code: string
+          created_at?: string
+          description?: string | null
+          discount_amount?: number
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          coupon_code?: string
+          created_at?: string
+          description?: string | null
+          discount_amount?: number
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       points_redemption_levels: {
         Row: {
           created_at: string

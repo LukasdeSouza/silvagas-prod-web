@@ -14,6 +14,7 @@ import Sorteios from "./pages/Sorteios";
 import Orders from "./pages/Orders";
 import RedemptionLevels from "./pages/RedemptionLevels";
 import Marketing from "./pages/Marketing";
+import Partners from "./pages/Partners";
 import NotFound from "./pages/NotFound";
 import { SplashScreen } from "./components/SplashScreen";
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/redemption-levels" element={<RedemptionLevels />} />
           <Route path="/marketing" element={<Marketing />} />
+          <Route path="/partners" element={<Partners />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
