@@ -10,7 +10,8 @@ import {
   ShoppingCart, 
   Star,
   ChevronRight,
-  Building2
+  Building2,
+  Users
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -248,6 +249,22 @@ export function AppSidebar() {
                     >
                       <Package className="h-4 w-4 transition-transform duration-200" />
                       <span className={collapsed ? "animate-fade-in" : ""}>Níveis de Resgate</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <NavLink 
+                      to="/users"
+                      className={({ isActive }) =>
+                        `transition-all duration-200 hover:scale-105 ${
+                          isActive ? "bg-primary text-primary-foreground" : ""
+                        }`
+                      }
+                    >
+                      <Users className="h-4 w-4 transition-transform duration-200" />
+                      <span className={collapsed ? "animate-fade-in" : ""}>Usuários</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
