@@ -15,8 +15,9 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
-import { Loader2, ShoppingCart } from "lucide-react";
+import { Loader2, ShoppingCart, CreditCard, Banknote, QrCode } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useUserRole } from "@/hooks/useUserRole";
 import {
   Pagination,
   PaginationContent,
@@ -38,12 +39,16 @@ interface Order {
   total_amount: number;
   status: string;
   created_at: string;
+  payment_method: string | null;
+  user_id: string;
+  user_email?: string;
   order_items: OrderItem[];
 }
 
 const Orders = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAdmin } = useUserRole();
   const [orders, setOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,6 +57,7 @@ const Orders = () => {
   const [endDate, setEndDate] = useState<string>("");
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -71,14 +77,47 @@ const Orders = () => {
     fetchOrders();
   };
 
+  const getPaymentMethodInfo = (method: string | null) => {
+    switch (method) {
+      case "cash":
+        return { label: "Dinheiro", icon: Banknote, color: "text-green-600" };
+      case "pix":
+        return { label: "PIX", icon: QrCode, color: "text-primary" };
+      case "credit_card":
+        return { label: "Crédito", icon: CreditCard, color: "text-blue-600" };
+      case "debit_card":
+        return { label: "Débito", icon: CreditCard, color: "text-orange-600" };
+      default:
+        return { label: "—", icon: null, color: "text-muted-foreground" };
+    }
+  };
+
   const fetchOrders = async () => {
     try {
       const { data: ordersData, error: ordersError } = await supabase
         .from("orders")
-        .select("id, total_amount, status, created_at")
+        .select("id, total_amount, status, created_at, payment_method, user_id")
         .order("created_at", { ascending: false });
 
       if (ordersError) throw ordersError;
+
+      // Fetch user emails for admins
+      const userIds = [...new Set((ordersData || []).map(o => o.user_id))];
+      let userEmailsMap: Record<string, string> = {};
+      
+      if (isAdmin && userIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("id, email")
+          .in("id", userIds);
+        
+        if (profiles) {
+          userEmailsMap = profiles.reduce((acc, p) => {
+            acc[p.id] = p.email;
+            return acc;
+          }, {} as Record<string, string>);
+        }
+      }
 
       const ordersWithItems = await Promise.all(
         (ordersData || []).map(async (order) => {
@@ -91,6 +130,7 @@ const Orders = () => {
 
           return {
             ...order,
+            user_email: userEmailsMap[order.user_id] || undefined,
             order_items: items || [],
           };
         })
@@ -163,6 +203,37 @@ const Orders = () => {
     }
   };
 
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
+    if (!isAdmin) return;
+    
+    setUpdatingOrderId(orderId);
+    try {
+      const { error } = await supabase
+        .from("orders")
+        .update({ status: newStatus })
+        .eq("id", orderId);
+
+      if (error) throw error;
+
+      setOrders(orders.map(order => 
+        order.id === orderId ? { ...order, status: newStatus } : order
+      ));
+
+      toast({
+        title: "Status atualizado",
+        description: `Pedido alterado para ${getStatusLabel(newStatus)}`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Erro ao atualizar status",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingOrderId(null);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -231,7 +302,10 @@ const Orders = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Data</TableHead>
+                    {isAdmin && <TableHead>Cliente</TableHead>}
+                    <TableHead>Pagamento</TableHead>
                     <TableHead>Status</TableHead>
+                    {isAdmin && <TableHead>Alterar Status</TableHead>}
                     <TableHead>Itens</TableHead>
                     <TableHead className="text-right">Total</TableHead>
                   </TableRow>
@@ -239,12 +313,15 @@ const Orders = () => {
                 <TableBody>
                   {currentOrders.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center text-muted-foreground">
+                      <TableCell colSpan={isAdmin ? 7 : 5} className="text-center text-muted-foreground">
                         Nenhum pedido encontrado
                       </TableCell>
                     </TableRow>
                   ) : (
-                    currentOrders.map((order) => (
+                    currentOrders.map((order) => {
+                      const paymentInfo = getPaymentMethodInfo(order.payment_method);
+                      const PaymentIcon = paymentInfo.icon;
+                      return (
                       <>
                         <TableRow
                           key={order.id}
@@ -256,11 +333,44 @@ const Orders = () => {
                           <TableCell>
                             {format(new Date(order.created_at), "dd/MM/yyyy HH:mm")}
                           </TableCell>
+                          {isAdmin && (
+                            <TableCell>
+                              <span className="text-sm">{order.user_email || "—"}</span>
+                            </TableCell>
+                          )}
+                          <TableCell>
+                            <div className={`flex items-center gap-2 ${paymentInfo.color}`}>
+                              {PaymentIcon && <PaymentIcon className="h-4 w-4" />}
+                              <span>{paymentInfo.label}</span>
+                            </div>
+                          </TableCell>
                           <TableCell>
                             <Badge className={getStatusColor(order.status)}>
                               {getStatusLabel(order.status)}
                             </Badge>
                           </TableCell>
+                          {isAdmin && (
+                            <TableCell onClick={(e) => e.stopPropagation()}>
+                              <Select
+                                value={order.status}
+                                onValueChange={(value) => handleStatusChange(order.id, value)}
+                                disabled={updatingOrderId === order.id}
+                              >
+                                <SelectTrigger className="w-[130px]">
+                                  {updatingOrderId === order.id ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <SelectValue />
+                                  )}
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="pending">Pendente</SelectItem>
+                                  <SelectItem value="completed">Concluído</SelectItem>
+                                  <SelectItem value="cancelled">Cancelado</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                          )}
                           <TableCell>
                             {order.order_items.length} {order.order_items.length === 1 ? "item" : "itens"}
                           </TableCell>
@@ -270,7 +380,7 @@ const Orders = () => {
                         </TableRow>
                         {expandedOrderId === order.id && (
                           <TableRow>
-                            <TableCell colSpan={4} className="bg-muted/30">
+                            <TableCell colSpan={isAdmin ? 7 : 5} className="bg-muted/30">
                               <div className="py-4">
                                 <h4 className="font-semibold mb-3">Itens do Pedido:</h4>
                                 <div className="space-y-2">
@@ -296,7 +406,7 @@ const Orders = () => {
                           </TableRow>
                         )}
                       </>
-                    ))
+                    );})
                   )}
                 </TableBody>
               </Table>

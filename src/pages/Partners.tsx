@@ -5,8 +5,7 @@ import { Plus, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PartnerTable } from "@/components/PartnerTable";
 import { PartnerDialog } from "@/components/PartnerDialog";
-import { Navigation } from "@/components/Navigation";
-import { useNavigate } from "react-router-dom";
+import { AuthLayout } from "@/components/AuthLayout";
 import { useUserRole } from "@/hooks/useUserRole";
 
 interface Partner {
@@ -24,7 +23,6 @@ interface Partner {
 
 const Partners = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
   const { isAdmin, isLoading: isRoleLoading } = useUserRole();
   const [partners, setPartners] = useState<Partner[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,11 +52,6 @@ const Partners = () => {
   useEffect(() => {
     fetchPartners();
   }, []);
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth");
-  };
 
   const handleEdit = (partner: Partner) => {
     setSelectedPartner(partner);
@@ -108,20 +101,18 @@ const Partners = () => {
 
   if (isRoleLoading || isLoading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navigation onSignOut={handleSignOut} />
+      <AuthLayout>
         <main className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
         </main>
-      </div>
+      </AuthLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation onSignOut={handleSignOut} />
+    <AuthLayout>
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
@@ -154,7 +145,7 @@ const Partners = () => {
           onSave={handleSave}
         />
       </main>
-    </div>
+    </AuthLayout>
   );
 };
 

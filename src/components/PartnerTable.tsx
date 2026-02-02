@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -9,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Pencil, Trash2, Building2, Ticket } from "lucide-react";
+import { Pencil, Trash2, Building2, Ticket, Search } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,6 +43,20 @@ interface PartnerTableProps {
 }
 
 export const PartnerTable = ({ partners, onEdit, onDelete }: PartnerTableProps) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredPartners = useMemo(() => {
+    if (!searchTerm.trim()) return partners;
+    
+    const term = searchTerm.toLowerCase();
+    return partners.filter(
+      (partner) =>
+        partner.name.toLowerCase().includes(term) ||
+        partner.coupon_code.toLowerCase().includes(term) ||
+        partner.description?.toLowerCase().includes(term) ||
+        partner.address?.toLowerCase().includes(term)
+    );
+  }, [partners, searchTerm]);
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("pt-BR", {
       style: "currency",
@@ -69,22 +84,41 @@ export const PartnerTable = ({ partners, onEdit, onDelete }: PartnerTableProps) 
   }
 
   return (
-    <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Logo</TableHead>
-            <TableHead>Nome</TableHead>
-            <TableHead>Endereço</TableHead>
-            <TableHead>Cupom</TableHead>
-            <TableHead className="text-right">Desconto</TableHead>
-            <TableHead className="text-center">Status</TableHead>
-            <TableHead>Cadastrado em</TableHead>
-            <TableHead className="text-right">Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {partners.map((partner) => (
+    <div className="space-y-4">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Buscar por nome, cupom, descrição ou endereço..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10"
+        />
+      </div>
+
+      {filteredPartners.length === 0 ? (
+        <div className="text-center py-12 bg-card rounded-lg border">
+          <Building2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <p className="text-muted-foreground">
+            {searchTerm ? "Nenhum parceiro encontrado com esse termo." : "Nenhum parceiro encontrado. Clique em \"Novo Parceiro\" para adicionar."}
+          </p>
+        </div>
+      ) : (
+        <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Logo</TableHead>
+                <TableHead>Nome</TableHead>
+                <TableHead>Endereço</TableHead>
+                <TableHead>Cupom</TableHead>
+                <TableHead className="text-right">Desconto</TableHead>
+                <TableHead className="text-center">Status</TableHead>
+                <TableHead>Cadastrado em</TableHead>
+                <TableHead className="text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredPartners.map((partner) => (
             <TableRow key={partner.id}>
               <TableCell>
                 <div className="w-16 h-16 rounded-md overflow-hidden bg-muted flex items-center justify-center">
@@ -172,8 +206,10 @@ export const PartnerTable = ({ partners, onEdit, onDelete }: PartnerTableProps) 
               </TableCell>
             </TableRow>
           ))}
-        </TableBody>
-      </Table>
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 };

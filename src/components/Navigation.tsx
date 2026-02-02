@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { Bell, Package, LogOut, LayoutDashboard, Wrench, Trophy, ShoppingCart, Building2 } from "lucide-react";
+import { Bell, Package, LogOut, LayoutDashboard, Wrench, Trophy, ShoppingCart, Building2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useUserRole } from "@/hooks/useUserRole";
