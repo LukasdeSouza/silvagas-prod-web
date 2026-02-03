@@ -511,6 +511,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      redeem_points: {
+        Args: { p_points_deduct: number; p_user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "user"

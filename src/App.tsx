@@ -16,6 +16,7 @@ import RedemptionLevels from "./pages/RedemptionLevels";
 import Marketing from "./pages/Marketing";
 import Partners from "./pages/Partners";
 import Users from "./pages/Users";
+import DataDeletion from "./pages/DataDeletion";
 import NotFound from "./pages/NotFound";
 import { SplashScreen } from "./components/SplashScreen";
 
@@ -30,6 +31,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/exclusao-de-dados" element={<DataDeletion />} />
           <Route path="/suporte" element={<Support />} />
           <Route path="/splash" element={<SplashScreen />} />
           <Route path="/dashboard" element={<Dashboard />} />
