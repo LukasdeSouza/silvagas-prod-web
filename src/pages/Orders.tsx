@@ -266,8 +266,8 @@ const Orders = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todos</SelectItem>
-                    <SelectItem value="pending">Pendente</SelectItem>
-                    <SelectItem value="completed">Concluído</SelectItem>
+                    <SelectItem value="pending">A caminho</SelectItem>
+                    <SelectItem value="completed">Entregue</SelectItem>
                     <SelectItem value="cancelled">Cancelado</SelectItem>
                   </SelectContent>
                 </Select>
@@ -366,8 +366,8 @@ const Orders = () => {
                                   )}
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="pending">Pendente</SelectItem>
-                                  <SelectItem value="completed">Concluído</SelectItem>
+                                  <SelectItem value="pending">A caminho</SelectItem>
+                                  <SelectItem value="completed">Entregue</SelectItem>
                                   <SelectItem value="cancelled">Cancelado</SelectItem>
                                 </SelectContent>
                               </Select>

@@ -179,7 +179,7 @@
   - Data e hora do pedido
   - Nome do cliente
   - Email do cliente
-  - Status (Pendente, Concluído, Cancelado)
+  - Status (A Caminho, Concluído, Cancelado)
   - Valor total
 
 ### Filtros de Pedidos

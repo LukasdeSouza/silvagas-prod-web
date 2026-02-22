@@ -188,7 +188,7 @@ export default function AdminDashboard() {
 
           <Card className="shadow-lg hover:shadow-[var(--shadow-elegant)] transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pedidos Pendentes</CardTitle>
+              <CardTitle className="text-sm font-medium">Pedidos a caminho</CardTitle>
               <div className="bg-accent/10 p-2 rounded-lg">
                 <TrendingUp className="h-5 w-5 text-accent" />
               </div>
@@ -246,8 +246,8 @@ export default function AdminDashboard() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="pending">Pendente</SelectItem>
-                  <SelectItem value="completed">Completo</SelectItem>
+                  <SelectItem value="pending">A Caminho</SelectItem>
+                  <SelectItem value="completed">Entregue</SelectItem>
                   <SelectItem value="cancelled">Cancelado</SelectItem>
                 </SelectContent>
               </Select>
