@@ -195,9 +195,9 @@ const Orders = () => {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "completed":
-        return "Concluído";
+        return "Entregue";
       case "pending":
-        return "Pendente";
+        return "A Caminho";
       case "cancelled":
         return "Cancelado";
       default:
