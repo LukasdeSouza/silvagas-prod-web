@@ -82,44 +82,48 @@ export type Database = {
       }
       notifications: {
         Row: {
+          action_url: string | null
           created_at: string
-          expire_at: string
+          icon: string | null
           id: string
+          image_url: string | null
+          is_read: boolean
           message: string
-          product_id: string | null
+          metadata: Json | null
           title: string
+          type: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          action_url?: string | null
           created_at?: string
-          expire_at: string
+          icon?: string | null
           id?: string
+          image_url?: string | null
+          is_read?: boolean
           message: string
-          product_id?: string | null
+          metadata?: Json | null
           title: string
+          type: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          action_url?: string | null
           created_at?: string
-          expire_at?: string
+          icon?: string | null
           id?: string
+          image_url?: string | null
+          is_read?: boolean
           message?: string
-          product_id?: string | null
+          metadata?: Json | null
           title?: string
+          type?: string
           updated_at?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "notifications_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       order_items: {
         Row: {
@@ -323,6 +327,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string
           email: string
           id: string
@@ -330,6 +335,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string
           email: string
           id: string
@@ -337,6 +343,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string
           email?: string
           id?: string
@@ -344,6 +351,35 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      raffle_participants: {
+        Row: {
+          id: string
+          participated_at: string
+          raffle_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          participated_at?: string
+          raffle_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          participated_at?: string
+          raffle_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "raffle_participants_raffle_id_fkey"
+            columns: ["raffle_id"]
+            isOneToOne: false
+            referencedRelation: "sorteios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sorteio_participants: {
         Row: {
@@ -393,6 +429,7 @@ export type Database = {
           product_id: string | null
           start_date: string
           updated_at: string
+          winner_id: string | null
         }
         Insert: {
           created_at?: string
@@ -405,6 +442,7 @@ export type Database = {
           product_id?: string | null
           start_date?: string
           updated_at?: string
+          winner_id?: string | null
         }
         Update: {
           created_at?: string
@@ -417,6 +455,7 @@ export type Database = {
           product_id?: string | null
           start_date?: string
           updated_at?: string
+          winner_id?: string | null
         }
         Relationships: [
           {
@@ -424,6 +463,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sorteios_winner_id_fkey"
+            columns: ["winner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -458,6 +504,30 @@ export type Database = {
           status?: string
           subject?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_badges: {
+        Row: {
+          badge_id: string
+          created_at: string
+          id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          created_at?: string
+          id?: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          created_at?: string
+          id?: string
+          unlocked_at?: string
+          user_id?: string
         }
         Relationships: []
       }

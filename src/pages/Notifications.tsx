@@ -14,24 +14,15 @@ interface Notification {
   user_id: string;
   title: string;
   message: string;
-  expire_at: string;
+  type: string;
+  is_read: boolean;
   created_at: string;
   updated_at: string;
-  product_id?: string;
-  product?: {
-    name: string;
-  } | null;
-}
-
-interface Product {
-  id: string;
-  name: string;
 }
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
@@ -42,7 +33,6 @@ const Notifications = () => {
   useEffect(() => {
     checkAuth();
     fetchNotifications();
-    fetchProducts();
   }, []);
 
   useEffect(() => {
@@ -60,10 +50,7 @@ const Notifications = () => {
     try {
       const { data, error } = await supabase
         .from("notifications")
-        .select(`
-          *,
-          product:products(name)
-        `)
+        .select("*")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -76,24 +63,6 @@ const Notifications = () => {
       });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchProducts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("products")
-        .select("id, name")
-        .order("name");
-
-      if (error) throw error;
-      setProducts(data || []);
-    } catch (error: any) {
-      toast({
-        title: "Erro ao carregar produtos",
-        description: error.message,
-        variant: "destructive",
-      });
     }
   };
 
@@ -110,7 +79,6 @@ const Notifications = () => {
     setFilteredNotifications(filtered);
   };
 
-
   const handleAddNotification = () => {
     setSelectedNotification(null);
     setDialogOpen(true);
@@ -124,7 +92,6 @@ const Notifications = () => {
   const handleDeleteNotification = async (id: string) => {
     try {
       const { error } = await supabase.from("notifications").delete().eq("id", id);
-
       if (error) throw error;
 
       toast({
@@ -141,7 +108,7 @@ const Notifications = () => {
     }
   };
 
-  const handleSaveNotification = async (data: Omit<Notification, "id" | "user_id" | "created_at" | "updated_at">) => {
+  const handleSaveNotification = async (data: { title: string; message: string; type: string }) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Usuário não autenticado");
@@ -220,7 +187,6 @@ const Notifications = () => {
           onOpenChange={setDialogOpen}
           notification={selectedNotification}
           onSave={handleSaveNotification}
-          products={products}
         />
       </div>
     </AuthLayout>

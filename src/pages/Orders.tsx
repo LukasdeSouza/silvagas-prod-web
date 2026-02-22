@@ -101,21 +101,23 @@ const Orders = () => {
 
       if (ordersError) throw ordersError;
 
-      // Fetch user emails for admins
+      // Fetch user emails from Auth for admins
       const userIds = [...new Set((ordersData || []).map(o => o.user_id))];
       let userEmailsMap: Record<string, string> = {};
       
       if (isAdmin && userIds.length > 0) {
-        const { data: profiles } = await supabase
-          .from("profiles")
-          .select("id, email")
-          .in("id", userIds);
-        
-        if (profiles) {
-          userEmailsMap = profiles.reduce((acc, p) => {
-            acc[p.id] = p.email;
-            return acc;
-          }, {} as Record<string, string>);
+        try {
+          const { data: authData } = await supabase.functions.invoke("get-auth-users", {
+            body: { user_ids: userIds },
+          });
+          
+          if (authData?.users) {
+            userEmailsMap = Object.fromEntries(
+              Object.entries(authData.users).map(([id, u]: [string, any]) => [id, u.email])
+            );
+          }
+        } catch (e) {
+          console.error("Error fetching auth users:", e);
         }
       }
 

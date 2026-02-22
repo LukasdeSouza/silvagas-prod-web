@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useNewOrderAlert } from "@/hooks/useNewOrderAlert";
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 
@@ -7,6 +8,8 @@ interface AuthLayoutProps {
 }
 
 export function AuthLayout({ children }: AuthLayoutProps) {
+  useNewOrderAlert();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">

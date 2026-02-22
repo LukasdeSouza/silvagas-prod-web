@@ -9,11 +9,9 @@ interface Notification {
   id: string;
   title: string;
   message: string;
-  expire_at: string;
+  type: string;
+  is_read: boolean;
   created_at: string;
-  product?: {
-    name: string;
-  } | null;
 }
 
 interface NotificationTableProps {
@@ -27,8 +25,13 @@ export const NotificationTable = ({
   onEdit,
   onDelete,
 }: NotificationTableProps) => {
-  const isExpired = (expireAt: string) => {
-    return new Date(expireAt) < new Date();
+  const getTypeLabel = (type: string) => {
+    switch (type) {
+      case "promo": return "Promoção";
+      case "order": return "Pedido";
+      case "system": return "Sistema";
+      default: return type;
+    }
   };
 
   return (
@@ -38,16 +41,15 @@ export const NotificationTable = ({
           <TableRow>
             <TableHead>Título</TableHead>
             <TableHead>Mensagem</TableHead>
-            <TableHead>Produto</TableHead>
-            <TableHead>Expira em</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead>Tipo</TableHead>
+            <TableHead>Criada em</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {notifications.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-center text-muted-foreground">
+              <TableCell colSpan={5} className="text-center text-muted-foreground">
                 Nenhuma notificação cadastrada
               </TableCell>
             </TableRow>
@@ -57,36 +59,19 @@ export const NotificationTable = ({
                 <TableCell className="font-medium">{notification.title}</TableCell>
                 <TableCell className="max-w-md truncate">{notification.message}</TableCell>
                 <TableCell>
-                  {notification.product?.name || "-"}
-                </TableCell>
-                <TableCell>
-                  {format(new Date(notification.expire_at), "dd/MM/yyyy", { locale: ptBR })}
-                </TableCell>
-                <TableCell>
-                  <span
-                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      isExpired(notification.expire_at)
-                        ? "bg-destructive/10 text-destructive"
-                        : "bg-primary/10 text-primary"
-                    }`}
-                  >
-                    {isExpired(notification.expire_at) ? "Expirada" : "Ativa"}
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                    {getTypeLabel(notification.type)}
                   </span>
+                </TableCell>
+                <TableCell>
+                  {format(new Date(notification.created_at), "dd/MM/yyyy", { locale: ptBR })}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onEdit(notification)}
-                    >
+                    <Button variant="ghost" size="icon" onClick={() => onEdit(notification)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onDelete(notification.id)}
-                    >
+                    <Button variant="ghost" size="icon" onClick={() => onDelete(notification.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
